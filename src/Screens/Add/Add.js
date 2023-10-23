@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
@@ -11,27 +10,41 @@ export default function Menu() {
     dataAdmissao: '',
   });
 
+  const [botaoTexto, setBotaoTexto] = useState("CADASTRAR");
   const [cadastroConcluido, setCadastroConcluido] = useState(false);
 
   const handleCadastro = async () => {
-    if (dados.nome && dados.cpf && dados.telefone && dados.dataAdmissao) {
+    const { nome, cpf, telefone, dataAdmissao } = dados;
+
+    if (nome === '' || cpf === '' || telefone === '' || dataAdmissao === '') {
+      alert('Preencha todos os campos para concluir o cadastro.');
+    } else {
+      const formattedCpf = dados.cpf ? dados.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : '';
+      const formattedTelefone = dados.telefone ? dados.telefone.replace(/(\d{2})(\d{4,})(\d{4})/, '($1) $2-$3') : '';
+      const formattedDataAdmissao = dados.dataAdmissao ? dados.dataAdmissao.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3') : '';
+
       try {
-        const response = await fetch('https://apigenerator.dronahq.com/api/-0r516Zt/Registration', {
-          method: 'POST',
+        const response = await fetch('https://viacep.com.br/ws/01001000/json/', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(dados),
         });
 
-        if (response.status === 201) {
-          setCadastroConcluido(true);
-          setDados({
-            nome: '',
-            cpf: '',
-            telefone: '',
-            dataAdmissao: '',
-          });
+        if (response.status === 200) {
+          if (cadastroConcluido) {
+            setCadastroConcluido(false);
+            setBotaoTexto("CADASTRAR");
+          } else {
+            setCadastroConcluido(true);
+            setBotaoTexto("CADASTRAR NOVAMENTE");
+            setDados({
+              nome: '',
+              cpf: '',
+              telefone: '',
+              dataAdmissao: '',
+            });
+          }
         } else {
           alert('Erro ao cadastrar o funcionário.');
         }
@@ -39,8 +52,6 @@ export default function Menu() {
         console.error(error);
         alert('Erro ao conectar à API.');
       }
-    } else {
-      alert('Preencha todos os campos para concluir o cadastro.');
     }
   };
 
@@ -58,7 +69,7 @@ export default function Menu() {
           />
         </View>
         <View style={styles.inputCpf}>
-          <TextInputMask
+        <TextInputMask
             type={'cpf'}
             placeholder='CPF: '
             value={dados.cpf}
@@ -97,16 +108,19 @@ export default function Menu() {
           />
         </View>
         <TouchableOpacity style={styles.viewBtnRegister} onPress={handleCadastro}>
-          <Text style={styles.TextRegister}>CADASTRAR</Text>
+          <Text style={styles.TextRegister}>{botaoTexto}</Text>
         </TouchableOpacity>
       </View>
-      {cadastroConcluido && <Text style={styles.TextRegister}>Funcionário cadastrado com sucesso!</Text>}
-      <StatusBar style="auto" />
+      {cadastroConcluido && (
+        <Text style={styles.RegisterSuccess}>
+          Funcionário cadastrado com sucesso!
+        </Text>
+      )}
     </View>
   );
 }
 
-  
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,40 +146,51 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
     borderRadius: 10,
+    borderColor: 'black',
   },
   inputCpf: {
     borderWidth: 1,
     padding: 5,
     borderRadius: 10,
     marginBottom: 10,
+    borderColor: 'black',
   },
   inputTelefone: {
     borderWidth: 1,
     padding: 5,
     borderRadius: 10,
+    borderColor: 'black',
     marginBottom: 10,
   },
   inputAdmissao: {
     borderWidth: 1,
     padding: 5,
     borderRadius: 10,
+    borderColor: 'black',
     marginBottom: 10,
   },
   viewBtnRegister: {
     borderWidth: 1,
-    width: 140,
-    height: 40,
+    width: 200, 
+    height: 42,
     borderRadius: 30,
     backgroundColor: 'blue',
-    top: '15%',
+    alignItems: 'center', // Alinhe o texto verticalmente
+    padding: 2, // Ajuste o espaçamento interno
+    left: 68
   },
   TextRegister: {
-    fontSize: 15,
-    width: 250,
+    fontSize: 14, // Ajuste o tamanho da fonte conforme necessário
     color: 'white',
     fontWeight: '900',
-    top: '20%',
-    left: '18%',
+    top: 7
+  },
+  
+  RegisterSucess: {
+    color: '#228B22',
+    marginTop: 68,
+    fontWeight: '900',
+    fontSize: 16
   },
   erro: {
     color: 'red',
