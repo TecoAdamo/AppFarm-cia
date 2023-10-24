@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Perfil() {
+export default function Deletar() {
   return (
     <View style={styles.container}>
       <View>
-        <Text>Olá (funcionário)</Text>
+        <Text>Excluir cadastro</Text>
       </View>
       <StatusBar style="auto" />
     </View>

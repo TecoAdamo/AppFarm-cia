@@ -1,13 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { TextInputMask } from 'react-native-masked-text';
+import React from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Home() {
-    const [dados, setDados] = useState({
-        cpf: '',
-    })
+export default function Edit() {
+    const navigation = useNavigation();
+
+    const handleCadastro = (item) => {
+        navigation.navigate('Editar', {
+            nome: item.nome,
+            cpf: item.cpf,
+        });
+    };
 
     const dadosFicticios = [
         { id: '1', nome: 'João Silva', cpf: '123.456.789-01', dataAdmissao: '01/01/2020', ativo: true },
@@ -35,32 +38,26 @@ export default function Home() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.viewInput}>
-                <TextInputMask style={styles.search}
-                    type={'cpf'}
-                    options={{
-                        format: 'XXX.XXX.XXX-XX',
-                    }}
-                    placeholder='Buscar CPF do cliente: '
-                    value={dados.cpf}
-                    onChangeText={(formatted, extracted) => {
-                        setDados({ ...dados, cpf: extracted });
-                    }}
+
+            <View style={styles.inputName}>
+                <TextInput
+                    placeholder='Buscar cadastro: '
                 />
-                <TouchableOpacity>
-                    <Ionicons name="search-outline" size={20} color="grey" />
-                </TouchableOpacity>
             </View>
+
 
             <FlatList
                 data={dadosFicticios}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.itemContainer}>
+                        <TouchableOpacity>
+
                         <View style={styles.itemHorizontal}>
                             <Text style={styles.nome}>Nome: {item.nome}</Text>
                             <Text style={styles.cpf}>CPF: {item.cpf}</Text>
                         </View>
+                        </TouchableOpacity>
                         <View style={styles.itemVertical}>
                             <View style={styles.statusLabelContainer}>
                                 <Text style={styles.statusLabel}>Status:</Text>
@@ -73,7 +70,7 @@ export default function Home() {
                 )}
                 showsVerticalScrollIndicator={false}
             />
-            <StatusBar style="auto" />
+           
         </View>
     );
 }
@@ -104,6 +101,18 @@ const styles = StyleSheet.create({
     },
     search: {
         flex: 1,
+    },
+    inputName:{
+        width: '100%',
+        flexDirection: 'row',
+        paddingLeft: 8,
+        paddingRight: 8,
+        paddingTop: 4,
+        paddingBottom: 4,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: 'black',
+        alignItems: 'center',
     },
     itemContainer: {
         flexDirection: 'row',

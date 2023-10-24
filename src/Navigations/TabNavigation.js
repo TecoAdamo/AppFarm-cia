@@ -29,7 +29,7 @@ export default function TabNavigator() {
         
         <Tab.Screen 
           name="Add" 
-          component={DrawerNavigation } 
+          component={DrawerNavigation} 
           options={{
             headerShown: false,
             
