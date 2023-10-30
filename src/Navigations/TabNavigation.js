@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../Screens/Home/Home';
 import DrawerNavigation from './DrawerNav';
-// import Add from '../Screens/Add/Add';
 import Profile from '../Screens/Profile/Profile';
 
 

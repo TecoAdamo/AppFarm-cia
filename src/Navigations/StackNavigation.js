@@ -1,16 +1,16 @@
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Edit from '../Screens/Edit/Edit';
-import Editar from '../Screens/Edit/Editar';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+ 
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 function StackNav() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Edit">
-        <Stack.Screen name="Edit" component={Edit} />
-        <Stack.Screen name="Editar" component={Editar} />
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={Home} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

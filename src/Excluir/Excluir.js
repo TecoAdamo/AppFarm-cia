@@ -1,10 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
-export default function Home() {
+export default function Excluir() {
+    const [dados, setDados] = useState({
+        cpf: '',
+    })
+
+    const [dadosFiltrados, setDadosFiltrados] = useState([]);
 
     const dadosFicticios = [
         { id: '1', nome: 'João Silva', cpf: '123.456.789-01', dataAdmissao: '01/01/2020', ativo: true },
@@ -30,16 +35,31 @@ export default function Home() {
     ];
     dadosFicticios.sort((a, b) => a.nome.localeCompare(b.nome));
 
+    // useEffect(() => {
+    //     const filtrarDadosPorCPF = () => {
+    //         if (dados.cpf) {
+    //             const cpfFormatado = dados.cpf.replace(/\D/g, ''); 
+    //             const dadosFiltrados = dadosFicticios.filter(item => item.cpf.includes(cpfFormatado));
+    //             setDadosFiltrados(dadosFiltrados);
+    //         } else {
+    //             setDadosFiltrados(dadosFicticios);
+    //         }
+    //     };
+
+    //     filtrarDadosPorCPF();
+    // }, [dados.cpf]);
+
     return (
         <View style={styles.container}>
             <View style={styles.viewInput}>
-                <TextInputMask style={styles.search}
+                <TextInputMask
+                    style={styles.search}
                     type={'cpf'}
                     options={{
                         format: 'XXX.XXX.XXX-XX',
                     }}
-                    placeholder='Buscar CPF do cliente: '
-
+                    placeholder='Buscar cadastro que deseja excluir: '
+                    value={dados.cpf}
                     onChangeText={(formatted, extracted) => {
                         setDados({ ...dados, cpf: extracted });
                     }}
@@ -47,32 +67,34 @@ export default function Home() {
                 <TouchableOpacity>
                     <Ionicons name="search-outline" size={20} color="grey" />
                 </TouchableOpacity>
-            </View>
 
+            </View>
             <FlatList
-                data={dadosFicticios}
+                data={dadosFicticios} // Renderize os dados filtrados
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
+                    <TouchableOpacity>
+
                     <View style={styles.itemContainer}>
-
-                        <View style={styles.itemHorizontal}>
-                            <Text style={styles.nome}>Nome: {item.nome}</Text>
-                            <Text style={styles.cpf}>CPF: {item.cpf}</Text>
-                        </View>
-
-
-                        <View style={styles.itemVertical}>
-                            <View style={styles.statusLabelContainer}>
-                                <Text style={styles.statusLabel}>Status:</Text>
-                                <Text style={item.ativo ? styles.statusAtivo : styles.statusInativo}>
-                                    {item.ativo ? 'Ativo' : 'Inativo'}
-                                </Text>
+                            <View style={styles.itemHorizontal}>
+                                <Text style={styles.nome}>Nome: {item.nome}</Text>
+                                <Text style={styles.cpf}>CPF: {item.cpf}</Text>
                             </View>
-                        </View>
+                            <View style={styles.itemVertical}>
+                                <View style={styles.statusLabelContainer}>
+                                    <Text style={styles.statusLabel}>Status:</Text>
+                                    <Text style={item.ativo ? styles.statusAtivo : styles.statusInativo}>
+                                        {item.ativo ? 'Ativo' : 'Inativo'}
+                                    </Text>
+                                </View>
+                            </View>
+                       
                     </View>
+                    </TouchableOpacity>
                 )}
                 showsVerticalScrollIndicator={false}
             />
+
             <StatusBar style="auto" />
         </View>
     );
@@ -87,6 +109,7 @@ const styles = StyleSheet.create({
         paddingLeft: 24,
         // alignItems: 'center',
         // justifyContent: 'center',
+
     },
     viewInput: {
         width: '100%',
